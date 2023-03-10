@@ -4,6 +4,8 @@ import pgzrun
 car = Actor("racecar")
 car.pos = (700 / 2, 900 / 2)
 SPEED = 4
+MIN_SPEED = 1
+MAX_SPEED = 6
 track_count = 0
 track_position = 250
 track_width = 120
@@ -26,12 +28,22 @@ def draw():
         screen.blit('cflag', (318, 268))
 
 def update():
-    global game_status, track_count
+    global game_status, track_count, SPEED
     if game_status == 0:
         if keyboard.left:
-            car.x -= 3
+            car.x -= 2
         if keyboard.right:
-            car.x += 3
+            car.x += 2
+        if keyboard.up:
+            SPEED += 1
+            if SPEED > MAX_SPEED:
+                SPEED = MAX_SPEED  # set to maximum speed if below it
+        if keyboard.down:
+            if SPEED > MIN_SPEED:
+                SPEED -= 1
+                for i in range(len(track_left)):
+                    track_left[i].y -= SPEED
+                    track_right[i].y -= SPEED  # set to minimum speed if below it
         update_track()
     if track_count > 200 :
         game_status = 2
